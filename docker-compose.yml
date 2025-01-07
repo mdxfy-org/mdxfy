@@ -1,0 +1,54 @@
+services:
+  mdxfy-nginx:
+    container_name: mdxfy-nginx
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - mdxfy-network
+
+  mdxfy-php-fpm:
+    container_name: mdxfy-php-fpm
+    extends:
+      file: ./mdxfy-api/docker-compose.yml
+      service: mdxfy-php-fpm
+
+  mdxfy-postgres:
+    container_name: mdxfy-postgres
+    extends:
+      file: ./mdxfy-api/docker-compose.yml
+      service: mdxfy-postgres
+
+  mdxfy-redis:
+    container_name: mdxfy-redis
+    extends:
+      file: ./mdxfy-api/docker-compose.yml
+      service: mdxfy-redis
+
+  mdxfy-data-bucket:
+    container_name: mdxfy-data-bucket
+    extends:
+      file: ./mdxfy-api/docker-compose.yml
+      service: mdxfy-data-bucket
+
+  mdxfy-web:
+    container_name: mdxfy-web
+    extends:
+      file: ./mdxfy-web/docker-compose.yml
+      service: mdxfy-web
+
+volumes:
+  postgres_data:
+  minio_data:
+  cache:
+    driver: local
+
+networks:
+  mdxfy-network:
+    driver: bridge
