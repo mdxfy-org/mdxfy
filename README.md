@@ -1,10 +1,10 @@
-# Setup de Testes do Projeto NomeDoSeuSistema
+# Setup de Testes do Projeto Agrofast
 
-Este guia descreve como configurar o ambiente de testes para o projeto NomeDoSeuSistema utilizando o repositório de infraestrutura.
+Este guia descreve como configurar o ambiente de testes para o projeto Agrofast utilizando o repositório de infraestrutura.
 
 ## Dependências do Projeto
 
-Para configurar o ambiente de testes do projeto NomeDoSeuSistema, é necessário ter as seguintes dependências instaladas no seu sistema:
+Para configurar o ambiente de testes do projeto Agrofast, é necessário ter as seguintes dependências instaladas no seu sistema:
 
 - **PHP**: O projeto utiliza PHP para o backend. Certifique-se de ter a versão correta instalada conforme especificado no arquivo `composer.json` do repositório `mdxfy-api`.
 - **Node.js**: Utilizado para o frontend e outras ferramentas de build. Verifique a versão necessária no arquivo `package.json` do repositório `mdxfy-web`.
@@ -42,7 +42,7 @@ Após clonar os repositórios, o script `init.sh` chamará automaticamente o scr
 Utilize o arquivo `docker-compose.yml` para configurar e iniciar os containers Docker:
 
 ```bash
-docker compose up -d
+docker-compose up -d
 ```
 
 Este comando irá iniciar os seguintes serviços:
@@ -51,11 +51,8 @@ Este comando irá iniciar os seguintes serviços:
 - php-fpm
 - postgres
 - web
+- socket
 
 ### 4. Acessar os Serviços
 
 Após iniciar os containers, você pode acessar os serviços nos seguintes endereços:
-
-- Web: [http://local.web.mdxfy.com](http://local.web.mdxfy.com)
-- Api: [http://local.api.mdxfy.com](http://local.api.mdxfy.com)
-- Console(bucket): [http://local.console.mdxfy.com](http://local.console.mdxfy.com)

@@ -7,8 +7,8 @@ echo "|      Clonando repositorios...      |"
 echo "--------------------------------------"
 
 REPOSITORIES=(
-  "git@github.com:iloElias/mdxfy-api.git"
-  "git@github.com:iloElias/mdxfy-web.git"
+  "git@github.com:mdxfy-org/mdxfy-api.git"
+  "git@github.com:mdxfy-org/mdxfy-web.git"
 )
 
 for REPO in "${REPOSITORIES[@]}"; do

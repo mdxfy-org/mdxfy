@@ -1,4 +1,8 @@
 mdxfy-api/
+mdxfy-app/
+mdxfy-socket/
 mdxfy-web/
+mdxfy-portfolio/
+mdxfy-api(laravel-migration)
 
 .env

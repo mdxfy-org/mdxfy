@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "--------------------------------------"
-echo "|     Instalando dependencias...     |"
+echo "|     Instalando dependências...     |"
 echo "--------------------------------------"
 
 declare -A dependencies=(

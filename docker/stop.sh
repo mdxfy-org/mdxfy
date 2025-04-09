@@ -4,4 +4,4 @@ echo "--------------------------------------"
 echo "|       Parando contêineres...       |"
 echo "--------------------------------------"
 
-docker stop mdxfy-nginx mdxfy-php-fpm mdxfy-postgres mdxfy-redis mdxfy-data-bucket create-bucket mdxfy-web mdxfy-portfolio mdxfy-socket
+docker remove mdxfy-nginx mdxfy-php-fpm mdxfy-postgres mdxfy-data-bucket mdxfy-web mdxfy-api

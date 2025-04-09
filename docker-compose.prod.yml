@@ -1,0 +1,60 @@
+services:
+  mdxfy-php-fpm:
+    container_name: mdxfy-php-fpm
+    extends:
+      file: ./mdxfy-api/docker-compose.yml
+      service: mdxfy-php-fpm
+
+  mdxfy-postgres:
+    container_name: mdxfy-postgres
+    extends:
+      file: ./mdxfy-api/docker-compose.yml
+      service: mdxfy-postgres
+
+  mdxfy-redis:
+    container_name: mdxfy-redis
+    extends:
+      file: ./mdxfy-api/docker-compose.yml
+      service: mdxfy-redis
+
+  mdxfy-data-bucket:
+    container_name: mdxfy-data-bucket
+    extends:
+      file: ./mdxfy-api/docker-compose.yml
+      service: mdxfy-data-bucket
+
+  mdxfy-web:
+    container_name: mdxfy-web
+    build:
+      context: ./mdxfy-web
+      dockerfile: ./Dockerfile
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./mdxfy-web:/web
+    networks:
+      - mdxfy-network
+
+  # mdxfy-socket:
+  #   container_name: mdxfy-socket
+  #   build:
+  #     context: ./mdxfy-socket
+  #     dockerfile: ./Dockerfile
+  #   ports:
+  #     - "8008:3000"
+  #   volumes:
+  #     - ./mdxfy-socket:/var/www/html/socket
+  #   networks:
+  #     - mdxfy-network
+
+volumes:
+  postgres_data:
+  minio_data:
+  cache:
+    driver: local
+
+networks:
+  mdxfy-network:
+    driver: bridge
+  mapdata-network:
+    external: true

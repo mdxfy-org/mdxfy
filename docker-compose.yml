@@ -1,13 +1,17 @@
 services:
   mdxfy-nginx:
     container_name: mdxfy-nginx
-    image: nginx:alpine
-    restart: always
+    extends:
+      file: /opt/services/services/docker/docker-compose.nginx.yml
+      service: nginx
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d/:/etc/nginx/conf.d
+      - /opt/services/services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /opt/services/services/nginx/conf.d:/etc/nginx/conf.d:ro
+      - /opt/services/services/nginx/default:/etc/nginx/default:ro
+      - ./config/nginx/conf.d/:/etc/nginx/conf.d:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -16,34 +20,74 @@ services:
   mdxfy-php-fpm:
     container_name: mdxfy-php-fpm
     extends:
-      file: ./mdxfy-api/docker-compose.yml
-      service: mdxfy-php-fpm
+      file: /opt/services/template/docker-compose.php.dev.yml
+      service: php-fpm
+    restart: always
+    working_dir: /var/www
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./mdxfy-api/:/var/www
+      - /opt/services/services/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    depends_on:
+      - mdxfy-nginx
+    networks:
+      - mdxfy-network
+      - mapdata-network
 
-  mdxfy-postgres:
+  mdxfy-postgres: # Only used for creating the application database
     container_name: mdxfy-postgres
-    extends:
-      file: ./mdxfy-api/docker-compose.yml
-      service: mdxfy-postgres
+    image: postgres:15
+    restart: on-failure
+    environment:
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_SCHEMA=${DB_SCHEMA}
+    networks:
+      - mdxfy-network
+      - mapdata-network
+    volumes:
+      - ./docker/database/init-db.sh:/usr/local/bin/init-db.sh
+    entrypoint: >
+      sh -c "
+      /usr/local/bin/init-db.sh
+      "
 
-  mdxfy-redis:
-    container_name: mdxfy-redis
-    extends:
-      file: ./mdxfy-api/docker-compose.yml
-      service: mdxfy-redis
-
-  mdxfy-data-bucket:
-    container_name: mdxfy-data-bucket
-    extends:
-      file: ./mdxfy-api/docker-compose.yml
-      service: mdxfy-data-bucket
+  mdxfy-minio: # Only used for creating the application bucket
+    container_name: mdxfy-minio
+    image: minio/mc:latest
+    restart: "no"
+    environment:
+      - APP_NAME=${APP_NAME}
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "
+      mc config host add minio http://minio:9100 ${AWS_ACCESS_KEY_ID} ${AWS_SECRET_ACCESS_KEY};
+      mc mb -p minio/${AWS_BUCKET};
+      echo 'Minio is ready!';
+      exit 0;
+      "
+    networks:
+      - mdxfy-network
+      - mapdata-network
 
   mdxfy-web:
     container_name: mdxfy-web
-    extends:
-      file: ./mdxfy-web/docker-compose.yml
-      service: mdxfy-web
+    build:
+      context: ./mdxfy-web
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./mdxfy-web:/web
+    networks:
+      - mdxfy-network
 
 volumes:
+  nginx_data:
   postgres_data:
   minio_data:
   cache:
@@ -52,3 +96,5 @@ volumes:
 networks:
   mdxfy-network:
     driver: bridge
+  mapdata-network:
+    external: true
