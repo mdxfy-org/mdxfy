@@ -1,10 +1,10 @@
-# Setup de Testes do Projeto Agrofast
+# Setup de Testes do Projeto MDxFy
 
-Este guia descreve como configurar o ambiente de testes para o projeto Agrofast utilizando o repositório de infraestrutura.
+Este guia descreve como configurar o ambiente de testes para o projeto MDxFy utilizando o repositório de infraestrutura.
 
 ## Dependências do Projeto
 
-Para configurar o ambiente de testes do projeto Agrofast, é necessário ter as seguintes dependências instaladas no seu sistema:
+Para configurar o ambiente de testes do projeto MDxFy, é necessário ter as seguintes dependências instaladas no seu sistema:
 
 - **PHP**: O projeto utiliza PHP para o backend. Certifique-se de ter a versão correta instalada conforme especificado no arquivo `composer.json` do repositório `mdxfy-api`.
 - **Node.js**: Utilizado para o frontend e outras ferramentas de build. Verifique a versão necessária no arquivo `package.json` do repositório `mdxfy-web`.
